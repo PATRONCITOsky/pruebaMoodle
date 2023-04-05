@@ -13,36 +13,46 @@
 //
 // Debería haber recibido una copia de la Licencia pública general GNU
 // junto con Moodle. Si no, vea <https://www.gnu.org/licenses/> ;.
-//
 
 /**
- * Archivo principal para ver saludos
+ * Archivo para localizar mensaje
  * 
  * @package local_greetings
  * @copyright 2023 Hoover <h2verhernandez@gmail.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 o posterior
  */
 
-require_once('../../config.php');
-require_once($CFG->dirroot. '/local/greetings/lib.php');
+defined('MOODLE_INTERNAL') || die();
 
-$context = context_system::instance();
-$PAGE->set_context($context);
-$PAGE->set_url(new moodle_url('/local/greetings/index.php'));
-$PAGE->set_pagelayout('standard');
-$PAGE->set_title($SITE->fullname);
-$PAGE->set_heading(get_string('pluginname', 'local_greetings'));
+/**
+ * Get a localised greeting message for a user
+ * 
+ * @param  \stdClass $user
+ * @return string
+ */
+function local_greetings_get_greeting($user) {
+    if ($user == null) {
+        return get_string('greetinguser', 'local_greetings');
+    }
 
+    $country = $user->country;
+    switch ($country) {
+        case 'ES':
+            $langstr = 'greetinguseres';
+            break;
+        case 'AU':
+            $langstr = 'greetinguserau';
+            break;
+        case 'FJ':
+            $langstr = 'greetinguserfj';
+            break;
+        case 'NZ':
+            $langstr = 'greetingusernz';
+            break;
+        default:
+            $langstr = 'greetingloggedinuser';
+            break;
+    }
 
-
-echo $OUTPUT->header();
-
-if (isloggedin()) {
-    echo local_greetings_get_greeting($USER);
+    return get_string($langstr, 'local_greetings', fullname($user));
 }
-
-if (!isloggedin()) {
-    echo get_string('greetinguser', 'local_greetings');
-}
-
-echo $OUTPUT->footer();
