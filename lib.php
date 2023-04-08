@@ -56,3 +56,36 @@ function local_greetings_get_greeting($user) {
 
     return get_string($langstr, 'local_greetings', fullname($user));
 }
+
+/**
+ * Inserta un enlace a index.php en el menú de navegación de la página principal del sitio.
+ *
+ * @param navigation_node $frontpage Nodo que representa la página principal en el árbol de navegación.
+ */
+function local_greetings_extend_navigation_frontpage(navigation_node $frontpage)
+{
+    $frontpage->add(
+        get_string('pluginname', 'local_greetings'),
+        new moodle_url('/local/greetings/index.php'),
+        navigation_node::TYPE_CUSTOM,
+        null,
+        null,
+        new pix_icon('t/message', '')
+    );
+}
+
+/**
+ * NO SÉ
+ * 
+ * @param global_navigation $root jajajajajja
+ */
+function local_greetings_extend_navigation(global_navigation $root)
+{
+    $node = navigation_node::create(
+        get_string('pluginname', 'local_greetings'),
+        new moodle_url('/local/greetings/index.php')
+    );
+
+    $node->showinflatnavigation = true;
+    $root->add_node($node);
+}
