@@ -75,9 +75,9 @@ function local_greetings_extend_navigation_frontpage(navigation_node $frontpage)
 }
 
 /**
- * NO SÉ
- * 
- * @param global_navigation $root jajajajajja
+ * Add link to index.php into navigation drawer.
+ *
+ * @param global_navigation $root Node representing the global navigation tree.
  */
 function local_greetings_extend_navigation(global_navigation $root)
 {

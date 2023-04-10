@@ -32,9 +32,10 @@
 function xmldb_local_greetings_upgrade($oldversion)
 {
     global $DB;
-    $dbman = $DB->get_manager();
-    if ($oldversion < 2023041001) {
 
+    $dbman = $DB->get_manager();
+
+    if ($oldversion < 2023041002) {
         // Define field userid to be added to local_greetings_messages.
         $table = new xmldb_table('local_greetings_messages');
         $field = new xmldb_field('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '1', 'timecreated');
@@ -44,8 +45,14 @@ function xmldb_local_greetings_upgrade($oldversion)
             $dbman->add_field($table, $field);
         }
 
+        // Define key greetings-user-foreign-key (foreign) to be added to local_greetings_messages.
+        $key = new xmldb_key('greetings-user-foreign-key', XMLDB_KEY_FOREIGN, ['userid'], 'user', ['id']);
+
+        // Launch add key greetings-user-foreign-key.
+        $dbman->add_key($table, $key);
+
         // Greetings savepoint reached.
-        upgrade_plugin_savepoint(true, 2023041001, 'local', 'greetings');
+        upgrade_plugin_savepoint(true, 2023041002, 'local', 'greetings');
     }
 
     return true;
